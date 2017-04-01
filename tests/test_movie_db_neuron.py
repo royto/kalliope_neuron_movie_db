@@ -3,7 +3,7 @@ import unittest
 
 import mock
 
-from kalliope.core.NeuronModule import MissingParameterException
+from kalliope.core.NeuronModule import MissingParameterException, InvalidParameterException
 from kalliope.neurons.movie_db.movie_db import Movie_db
 
 
@@ -15,7 +15,7 @@ class TestMovieDb(unittest.TestCase):
         self.movie = "Matrix"
         self.people = "Keanu Reeves"
 
-    def testParameters(self):
+    def testMissingParameters(self):
         def run_test(parameters_to_test):
             with self.assertRaises(MissingParameterException):
                 Movie_db(**parameters_to_test)
@@ -35,8 +35,7 @@ class TestMovieDb(unittest.TestCase):
             "action": self.action,
         }
         run_test(parameters)
-
-        
+   
         # missing Movie for ACTION MOVIE
         parameters = {
             "action": self.action,
@@ -47,6 +46,18 @@ class TestMovieDb(unittest.TestCase):
         # missing Movie for ACTION PEOPLE
         parameters = {
             "action": 'PEOPLE',
+            "api_key": self.api_key,
+        }
+        run_test(parameters)
+
+    def testInvalidParameters(self):
+        def run_test(parameters_to_test):
+            with self.assertRaises(InvalidParameterException):
+                Movie_db(**parameters_to_test)
+
+        # invalid action
+        parameters = {
+            "action": 'INVALID',
             "api_key": self.api_key,
         }
         run_test(parameters)

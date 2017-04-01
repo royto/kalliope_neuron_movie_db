@@ -3,7 +3,7 @@ import logging
 import tmdbsimple as tmdb
 
 from kalliope import Utils
-from kalliope.core.NeuronModule import NeuronModule, MissingParameterException
+from kalliope.core.NeuronModule import NeuronModule, MissingParameterException, InvalidParameterException
 
 logging.basicConfig()
 logger = logging.getLogger("kalliope")
@@ -109,6 +109,8 @@ class Movie_db(NeuronModule):
             raise MissingParameterException("MovieDb needs an api key")
         if self.action is None:
             raise MissingParameterException("MovieDb needs an action parameter")
+        if self.action not in MovieDb_Actions:
+            raise InvalidParameterException("MovieDb: invalid actions")    
         return True
 
     def _is_movie_parameters_ok(self):
