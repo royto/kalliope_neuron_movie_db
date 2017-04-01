@@ -31,6 +31,8 @@ class Movie_db(NeuronModule):
         self.region = kwargs.get('region', None)
 
         self.people = kwargs.get('people', None)
+
+        logger.debug("Movie Db launch for action %s", self.action)
         
         # check parameters
         if self._is_parameters_ok():
