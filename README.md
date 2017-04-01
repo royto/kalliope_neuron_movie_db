@@ -68,7 +68,7 @@ The template defined in the templates/movie_db_movie.j2
   Main actors are: {{ actors[:5]|map(attribute='name')|join(', ') }}
 
 {% else %}
-    Aucun film trouvé
+    No movie found
 {% endif %}
 ```
 
