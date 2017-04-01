@@ -43,7 +43,7 @@ Each of them requires specific options, return values and synapses example :
 ``` yml
   - name: "search-movie"
     signals:
-      - order: "Search for Movie {{ movie}}"
+      - order: "search for Movie {{ movie}}"
     neurons:
       - movie_db:
           api_key: "YOUR_API_KEY"
@@ -94,7 +94,9 @@ The template defined in the templates/movie_db_movie.j2
 ``` yml
   - name: "movie-people"
     signals:
-      - order: "Get Info about Movie {{ people }}"
+      - order: "get Info about actor {{ people }}"
+      - order: "get Info about actress {{ people }}"
+      - order: "get Info about director {{ people }}"
     neurons:
       - movie_db:
           api_key: "YOUR_API_KEY"
@@ -127,7 +129,7 @@ see [get popular movies response schema](https://developers.themoviedb.org/3/mov
 ``` yml
 - name: "popular-movie"
   signals:
-    - order: "What are popular movies"
+    - order: "what are popular movies"
   neurons:
     - movie_db:
         api_key: "YOUR_API_KEY"
@@ -167,7 +169,7 @@ see [get top rated movies response schema](https://developers.themoviedb.org/3/m
 ``` yml
 - name: "top-rated-movie"
   signals:
-    - order: "What are the top rated movies"
+    - order: "what are the top rated movies"
   neurons:
     - movie_db:
         api_key: "YOUR_API_KEY"
@@ -207,7 +209,7 @@ see [get upcoming movies response schema](https://developers.themoviedb.org/3/mo
 ``` yml
 - name: "upcoming-movie"
   signals:
-    - order: "What are upcoming movies"
+    - order: "what are upcoming movies"
   neurons:
     - movie_db:
         api_key: "YOUR_API_KEY"
@@ -248,7 +250,7 @@ see [get now playing movies response schema](https://developers.themoviedb.org/3
 ``` yml
 - name: "now-playing-movie"
    signals:
-     - order: "What are the movies played now"
+     - order: "what are the movies played now"
    neurons:
      - movie_db:
          api_key: "YOUR_API_KEY"
