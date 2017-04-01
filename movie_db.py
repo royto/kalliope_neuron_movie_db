@@ -8,7 +8,7 @@ from kalliope.core.NeuronModule import NeuronModule, MissingParameterException
 logging.basicConfig()
 logger = logging.getLogger("kalliope")
 
-Slack_Actions = (
+MovieDb_Actions = (
     "MOVIE",
     "PEOPLE",
     "POPULAR",
@@ -39,7 +39,7 @@ class Movie_db(NeuronModule):
             
             tmdb.API_KEY = self.api_key
 
-            if self.action == Slack_Actions[0]:  # MOVIE
+            if self.action == MovieDb_Actions[0]:  # MOVIE
                 if self._is_movie_parameters_ok():
                     logger.debug("Searching for movies %s for language %s", self.movie, self.language)
 
@@ -60,7 +60,7 @@ class Movie_db(NeuronModule):
                     
                     self.say(result)
                     
-            if self.action == Slack_Actions[1]:  # PEOPLE
+            if self.action == MovieDb_Actions[1]:  # PEOPLE
                 if self.is_people_parameters_ok():   
                     logger.debug("Searching for people with query %s" % self.people)
 
@@ -74,25 +74,25 @@ class Movie_db(NeuronModule):
                     ##peopleResponse = people.info()
                     ##self.say(peopleResponse)
 
-            if self.action == Slack_Actions[2]:  # POPULAR
+            if self.action == MovieDb_Actions[2]:  # POPULAR
                 logger.debug("Searching for popular movies for language %s" % self.language)
                 movies = tmdb.Movies()
                 popularResponse = movies.popular(language= self.language)
                 self.say(popularResponse)
 
-            if self.action == Slack_Actions[3]:  # TOP_RATED
+            if self.action == MovieDb_Actions[3]:  # TOP_RATED
                 logger.debug("Searching for top rated movies for language %s" % self.language)
                 movies = tmdb.Movies()
                 popularResponse = movies.top_rated(language= self.language)
                 self.say(popularResponse)
 
-            if self.action == Slack_Actions[4]:  # UPCOMING
+            if self.action == MovieDb_Actions[4]:  # UPCOMING
                 logger.debug("Searching for upcoming movies for language %s" % self.language)
                 movies = tmdb.Movies()
                 popularResponse = movies.upcoming(language= self.language, region=self.region)
                 self.say(popularResponse)
 
-            if self.action == Slack_Actions[5]:  # NOW_PLAYING
+            if self.action == MovieDb_Actions[5]:  # NOW_PLAYING
                 logger.debug("Searching for now playing movies for language %s" % self.language)
                 movies = tmdb.Movies()
                 popularResponse = movies.now_playing(language= self.language, region=self.region)
