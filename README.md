@@ -57,15 +57,19 @@ Each of them requires specific options, return values and synapses example :
 
 The template defined in the templates/movie_db_movie.j2
 ```jinja2
-{{ title }}, is a film released on {{ release_date }}.
+{% if movie is defined %}
+  {{ movie["title"] }}, is a film released on {{ movie["release_date"][:4] }}.
+  {{ movie["title"] }} is a movie of {{ movie["genres"]|map(attribute='name')|join(', ') }}
 
-{{ title }} is a movie of {{ genres|map(attribute='name')|join(', ') }}
+  Synopsis :
+  {{ movie["overview"] }}
 
-Synopsis :
-{{ overview }}
+  {% set actors = movie['credits']['cast'] %}
+  Main actors are: {{ actors[:5]|map(attribute='name')|join(', ') }}
 
-{% set actors = credits['cast'] %}
-Main actors are : {{ actors[:5]|map(attribute='name')|join(', ') }}
+{% else %}
+    Aucun film trouvé
+{% endif %}
 ```
 
 #### PEOPLE

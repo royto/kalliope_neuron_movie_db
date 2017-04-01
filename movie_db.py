@@ -43,15 +43,22 @@ class Movie_db(NeuronModule):
                 if self._is_movie_parameters_ok():
                     logger.debug("Searching for movies %s for language %s", self.movie, self.language)
 
+                    result = dict()
+                    result["query"] = self.movie
                     search = tmdb.Search()
-                    response = search.movie(query= self.movie, language= self.language)
-                    # next(iter(search.result), None)
-                    firstMovie = search.results[0]#next(iter(search.results), None)
-                    logger.debug("Movie db first result : %s" % firstMovie['title'] )
+                    searchResponse = search.movie(query= self.movie, language= self.language)
+
+                    firstMovie = next(iter(searchResponse["results"]), None)
+                    if firstMovie is None:
+                        logger.debug("No movie matches the query")
+
+                    else:
+                        logger.debug("Movie db first result : %s with id %s", firstMovie['title'], firstMovie['id'])
                     
-                    movie = tmdb.Movies(firstMovie['id'])
-                    infosResponse = movie.info(language= self.language, append_to_response='credits')
-                    self.say(infosResponse)
+                        movie = tmdb.Movies(firstMovie['id'])
+                        result['movie'] = movie.info(language= self.language, append_to_response='credits')
+                    
+                    self.say(result)
                     
             if self.action == Slack_Actions[1]:  # PEOPLE
                 if self.is_people_parameters_ok():   
