@@ -30,6 +30,7 @@ Each of them requires specific options, return values and synapses example :
 | api_key     | YES      | String | None    |            | The API Key                          |
 | movie       | YES      | String | None    |            | The movie to search for              |
 | language    | NO       | String | en-US   |            | The language as ISO 639-1 code       |
+| extra_movie | NO       | String | None    |            | [extra data about the movie](https://developers.themoviedb.org/3/getting-started/append-to-response) |
 
 
 ##### Return Values
@@ -49,6 +50,7 @@ Each of them requires specific options, return values and synapses example :
           api_key: "YOUR_API_KEY"
           action: "MOVIE"
           language: "fr"
+          extra_movie: "credits"
           file_template: templates/movie_db_movie.j2
           args:
             - movie
@@ -63,10 +65,11 @@ The template defined in the templates/movie_db_movie.j2
 
   Synopsis :
   {{ movie["overview"] }}
-
-  {% set actors = movie['credits']['cast'] %}
-  Main actors are: {{ actors[:5]|map(attribute='name')|join(', ') }}
-
+  
+  {% if movie['credits'] is defined %}
+    {% set actors = movie['credits']['cast'] %}
+    Main actors are: {{ actors[:5]|map(attribute='name')|join(', ') }}
+  {% endif %}
 {% else %}
     No movie found
 {% endif %}

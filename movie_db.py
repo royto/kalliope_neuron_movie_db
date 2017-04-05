@@ -33,6 +33,7 @@ class Movie_db(NeuronModule):
         self.region = kwargs.get('region', None)
 
         self.movie = kwargs.get('movie', None)
+        self.movie_extra = kwargs.get('movie_extra', None)
 
         self.people = kwargs.get('people', None)
 
@@ -65,7 +66,7 @@ class Movie_db(NeuronModule):
 
                         movie = tmdb.Movies(first_movie['id'])
                         result['movie'] = movie.info(language=self.language,
-                                                     append_to_response='credits')
+                                                     append_to_response=self.movie_extra)
 
                     self.say(result)
 
