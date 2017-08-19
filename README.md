@@ -52,8 +52,7 @@ Each of them requires specific options, return values and synapses example :
           language: "fr"
           extra_movie: "credits"
           file_template: templates/movie_db_movie.j2
-          args:
-            - movie
+          movie: {{ movie }}
 
 ```
 
@@ -106,8 +105,7 @@ The template defined in the templates/movie_db_movie.j2
           action: "PEOPLE"
           say_template:
           - "{{ name }}, born {{ birthday }} at {{place_of_birth }}, {{ biography }}, known for [:5]|map(attribute='title')|join(', ')  "
-          args:
-            - people
+          people: {{ people }}
 ```
 
 #### POPULAR
@@ -283,8 +281,8 @@ In order to be able to query The Movie Db API, you need to get a api Key.
 1. Create a [Movie Db account](https://slack.com/signin)
 2. Connect to your account
 3. Go to API in the menu
-4. Create a request for developper api key  
+4. Create a request for developer api key  
 5. Accept licence agreement
-6. Fill informations about application
+6. Fill information about application
 
 
