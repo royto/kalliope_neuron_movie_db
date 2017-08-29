@@ -9,6 +9,7 @@ This neuron allows you to query The Movie DB API to
 - get list of Top rated Movies
 - get list of upcoming movies
 - get list of playing now movies 
+- get info about a TV Show
 
 ## Installation
 ```bash
@@ -17,7 +18,7 @@ kalliope install --git-url https://github.com/royto/kalliope_neuron_movie_db.git
 
 ## Specification
 
-The Movie Db Neuron has multiple available actions : MOVIE, PEOPLE, POPULAR, TOP_RATED, UPCOMING and PLAYING NOW.
+The Movie Db Neuron has multiple available actions : MOVIE, PEOPLE, POPULAR, TOP_RATED, UPCOMING and PLAYING NOW, TV.
 
 Each of them requires specific options, return values and synapses
 
@@ -31,7 +32,7 @@ Each of them requires specific options, return values and synapses
 | api_key     | YES      | String | None    |            | The API Key                          |
 | movie       | YES      | String | None    |            | The movie to search for              |
 | language    | NO       | String | en-US   |            | The language as ISO 639-1 code       |
-| extra_movie | NO       | String | None    |            | [extra data about the movie](https://developers.themoviedb.org/3/getting-started/append-to-response) |
+| movie_extra | NO       | String | None    |            | [extra data about the movie](https://developers.themoviedb.org/3/getting-started/append-to-response) |
 
 ##### Return Values
 
@@ -50,7 +51,7 @@ Each of them requires specific options, return values and synapses
           api_key: "YOUR_API_KEY"
           action: "MOVIE"
           language: "fr"
-          extra_movie: "credits"
+          movie_extra: "credits"
           file_template: templates/movie_db_movie.j2
           movie: "{{ movie }}"
 
@@ -268,6 +269,60 @@ List of movies played now:
 {% for movie in results %}
     {{ movie['title'] }}
 {% endfor %}
+```
+
+#### TV 
+##### Options
+
+| parameter   | required | type   | default | choices    | comment                              |
+|-------------|----------|--------|---------|------------|--------------------------------------|
+| action      | YES      | String | None    | TV         | Defines the action type              |
+| api_key     | YES      | String | None    |            | The API Key                          |
+| tv          | YES      | String | None    |            | The TV Show to search for            |
+| language    | NO       | String | en-US   |            | The language as ISO 639-1 code       |
+| tv_extra    | NO       | String | None    |            | [extra data about the tv](https://developers.themoviedb.org/3/getting-started/append-to-response) |
+
+
+##### Return Values
+
+| Name    | Description                                      | Type   | sample      |
+|---------|--------------------------------------------------|--------|-------------|
+| tv      | Information about the 1st TV Show matching query | Object | see [get details schema](https://developers.themoviedb.org/3/tv/get-tv-details)        |
+
+##### Synapses example
+
+``` yml
+  - name: "search-tv"
+    signals:
+      - order: "search for TV Show {{ tv }}"
+    neurons:
+      - movie_db:
+          api_key: "YOUR_API_KEY"
+          action: "TV"
+          language: "fr"
+          tv_extra: "credits"
+          file_template: templates/tv_db_movie.j2
+          tv: {{ tv }}
+
+```
+
+The template defined in the templates/tv_db_movie.j2
+```jinja2
+{% if tv is defined %}
+    
+{{ tv["name"] }}, is a TV Show of {{ tv["number_of_episodes"] }} on {{ tv["number_of_seasons"] }} seasons.
+
+{{ tv["name"] }} is a TV Show of {{ tv["genres"]|map(attribute='name')|join(', ') }}
+
+Synopsis :
+{{ tv["overview"] }}
+    {% if tv['credits'] is defined %}
+        {% set actors = tv['credits']['cast'] %}
+        Main actors are: {{ actors[:5]|map(attribute='name')|join(', ') }}
+    {% endif %}
+{% else %}
+    No TV Show found
+{% endif %}
 ```
 
 
