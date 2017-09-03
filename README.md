@@ -37,7 +37,7 @@ Each of them requires specific options, return values and synapses
 | api_key     | YES      | String | None    |            | The API Key                          |
 | movie       | YES      | String | None    |            | The movie to search for              |
 | language    | NO       | String | en-US   |            | The language as ISO 639-1 code       |
-| movie_extra | NO       | String | None    |            | [extra data about the movie](https://developers.themoviedb.org/3/getting-started/append-to-response) |
+| movie_extra | NO       | String | None    |            | [extra data about the movie](EXTRA_DATA.md) |
 
 ##### Return Values
 
@@ -285,7 +285,7 @@ List of movies played now:
 | api_key     | YES      | String | None    |            | The API Key                          |
 | tv          | YES      | String | None    |            | The TV Show to search for            |
 | language    | NO       | String | en-US   |            | The language as ISO 639-1 code       |
-| tv_extra    | NO       | String | None    |            | [extra data about the tv](https://developers.themoviedb.org/3/getting-started/append-to-response) |
+| tv_extra    | NO       | String | None    |            | [extra data about the tv](EXTRA_DATA.md) |
 
 
 ##### Return Values
@@ -444,7 +444,7 @@ Latest TV Show: {{ name }}
 | tv          | YES      | String | None    |            | The TV Show to search for            |
 | tv_season   | YES      | Int    | None    |            | The TV Show season to search for     |
 | language    | NO       | String | en-US   |            | The language as ISO 639-1 code       |
-| tv_extra    | NO       | String | None    |            | [extra data about the tv](https://developers.themoviedb.org/3/getting-started/append-to-response) |
+| tv_extra    | NO       | String | None    |            | [extra data about the tv](EXTRA_DATA.md) |
 
 ##### Return Values
 see [get tv season details response schema](https://developers.themoviedb.org/3/tv-seasons) 
@@ -500,7 +500,7 @@ The template defined in the templates/movie_db_tv_season.j2
 | tv_season   | YES      | Int    | None    |            | The TV Show season to search for     |
 | tv_episode  | YES      | Int    | None    |            | The TV Show episode to search for    |
 | language    | NO       | String | en-US   |            | The language as ISO 639-1 code       |
-| tv_extra    | NO       | String | None    |            | [extra data about the tv](https://developers.themoviedb.org/3/getting-started/append-to-response) |
+| tv_extra    | NO       | String | None    |            | [extra data about the tv](EXTRA_DATA.md) |
 
 ##### Return Values
 see [get tv episode details response schema](https://developers.themoviedb.org/3/tv-episodes) 
