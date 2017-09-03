@@ -10,6 +10,11 @@ This neuron allows you to query The Movie DB API to
 - get list of upcoming movies
 - get list of playing now movies 
 - get info about a TV Show
+- get list of popular TV Shows
+- get list of Top rated TV Shows
+- get list of latest TV Shows
+- get info about a TV Show Season
+- get info about a TV Show Episode
 
 ## Installation
 ```bash
@@ -325,8 +330,217 @@ Synopsis :
 {% endif %}
 ```
 
+###TV_POPULAR
+##### Options
+| parameter   | required | type   | default | choices    | comment                              |
+|-------------|----------|--------|---------|------------|--------------------------------------|
+| action      | YES      | String | None    | TV_POPULAR | Defines the action type              |
+| api_key     | YES      | String | None    |            | The API Key                          |
+| language    | NO       | String | en-US   |            | The language as ISO 639-1 code       |
 
-##### 
+##### Return Values
+see [get popular tv response schema](https://developers.themoviedb.org/3/tv/get-popular-tv) 
+
+| Name    | Description                     | Type   | sample      |
+|---------|---------------------------------|--------|-------------|
+| result  | List of popular TV Show         | List   |             |
+##### Synapses example
+
+```yml 
+  - name: "popular-tv"
+    signals:
+      - order: "What are popular tv shows"
+    neurons:
+      - movie_db:
+          api_key: "YOUR_API_KEY"
+          action: "TV_POPULAR"
+          language: "en"
+          file_template: templates/movie_db_tv_popular.j2
+```
+
+The template defined in the templates/movie_db_tv_popular.j2
+```jinja2
+List of popular TV Shows :
+{% for tv in results %}
+    {{ tv['name'] }}
+{% endfor %}
+```
+
+###TV_TOP_RATED
+##### Options
+| parameter   | required | type   | default | choices      | comment                              |
+|-------------|----------|--------|---------|--------------|--------------------------------------|
+| action      | YES      | String | None    | TV_TOP_RATED | Defines the action type              |
+| api_key     | YES      | String | None    |              | The API Key                          |
+| language    | NO       | String | en-US   |              | The language as ISO 639-1 code       |
+
+##### Return Values
+see [get top rated tv response schema](https://developers.themoviedb.org/3/tv/get-top-rated-tv) 
+
+| Name    | Description                     | Type   | sample      |
+|---------|---------------------------------|--------|-------------|
+| result  | List of top rated TV Show       | List   |             |
+
+##### Synapses example
+```yml
+  - name: "top-rated-tv"
+    signals:
+      - order: "What are top rated Tv shows"
+    neurons:
+      - movie_db:
+          api_key: "YOUR_API_KEY"
+          action: "TV_TOP_RATED"
+          language: "fr"
+          file_template: templates/movie_db_tv_top_rated.j2
+```
+
+The template defined in the templates/movie_db_tv_top_rated.j2
+```jinja2
+List of top rated TV Shows :
+{% for tv in results %}
+    {{ tv['name'] }}
+{% endfor %}
+```
+
+###TV_LATEST
+##### Options
+| parameter   | required | type   | default | choices    | comment                              |
+|-------------|----------|--------|---------|------------|--------------------------------------|
+| action      | YES      | String | None    | TV_LATEST  | Defines the action type              |
+| api_key     | YES      | String | None    |            | The API Key                          |
+| language    | NO       | String | en-US   |            | The language as ISO 639-1 code       |
+
+##### Return Values
+see [get latest tv response schema](https://developers.themoviedb.org/3/tv/get-latest-tv) 
+
+| Name   | Description                        | Type   | sample      |
+|--------|------------------------------------|--------|-------------|
+| result | List of most newly created TV show | List   |             |
+
+##### Synapses example
+```yml 
+  - name: "latest-tv"
+    signals:
+      - order: "What are the most newly created TV show"
+    neurons:
+      - movie_db:
+          api_key: "YOUR_API_KEY"
+          action: "TV_LATEST"
+          language: "fr"
+          file_template: templates/movie_db_tv_latest.j2
+```
+
+The template defined in the templates/movie_db_tv_latest.j2
+```jinja2
+Latest TV Show: {{ name }}
+```
+
+###TV_SEASON
+##### Options
+| parameter   | required | type   | default | choices    | comment                              |
+|-------------|----------|--------|---------|------------|--------------------------------------|
+| action      | YES      | String | None    | TV         | Defines the action type              |
+| api_key     | YES      | String | None    |            | The API Key                          |
+| tv          | YES      | String | None    |            | The TV Show to search for            |
+| tv_season   | YES      | Int    | None    |            | The TV Show season to search for     |
+| language    | NO       | String | en-US   |            | The language as ISO 639-1 code       |
+| tv_extra    | NO       | String | None    |            | [extra data about the tv](https://developers.themoviedb.org/3/getting-started/append-to-response) |
+
+##### Return Values
+see [get tv season details response schema](https://developers.themoviedb.org/3/tv-seasons) 
+
+| Name   | Description                        | Type   | sample      |
+|--------|------------------------------------|--------|-------------|
+| query  | List of parameters (Tv, season)    | Object |             |
+| tv     | Info about TV Show                 | Object |             |
+| season | Info about TV Show Season          | Object |             |
+
+##### Synapses example
+```yml 
+- name: "tv-season"
+    signals:
+      - order: "Info about season {{ tv_season }} of {{ tv }}"
+    neurons:
+      - movie_db:
+          api_key: "YOUR_API_KEY"
+          action: "TV_SEASON"
+          language: "fr"
+          file_template: templates/movie_db_tv_season.j2
+          tv: "{{ tv }}"
+          tv_season: "{{ tv_season }}"
+```
+
+The template defined in the templates/movie_db_tv_season.j2
+```jinja2
+{% if tv is defined %}
+    {% if season is defined %}
+        Season {{ query["season"] }} of {{ query["tv"] }} : {{ season["name"] }}.
+        
+        Overview : {{ season["overview"] }}
+        
+        Name of {{ season["episodes"] }} episodes: 
+        {% for episode in season["episodes"] %}
+            Episode {{ episode["episode_number"] }}: {{ episode["name"] }}
+        {% endfor %}
+    {% else %}
+        Season {{ query["season"] }} of {{ query["tv"] }} not found 
+    {% endif %}
+{% else %}
+    Tv Show {{ query["tv"] }} not found
+{% endif %}
+```
+
+###TV_EPISODE
+##### Options
+| parameter   | required | type   | default | choices    | comment                              |
+|-------------|----------|--------|---------|------------|--------------------------------------|
+| action      | YES      | String | None    | TV         | Defines the action type              |
+| api_key     | YES      | String | None    |            | The API Key                          |
+| tv          | YES      | String | None    |            | The movie to search for              |
+| tv_season   | YES      | Int    | None    |            | The TV Show season to search for     |
+| tv_episode  | YES      | Int    | None    |            | The TV Show episode to search for    |
+| language    | NO       | String | en-US   |            | The language as ISO 639-1 code       |
+| tv_extra    | NO       | String | None    |            | [extra data about the tv](https://developers.themoviedb.org/3/getting-started/append-to-response) |
+
+##### Return Values
+see [get tv episode details response schema](https://developers.themoviedb.org/3/tv-episodes) 
+
+| Name    | Description                              | Type   | sample      |
+|--------- ------------------------------------------|--------|-------------|
+| query   | List of parameters (Tv, season, episode) | Object |             |
+| tv      | Info about TV Show                       | Object |             |
+| episode | Info about TV Show Episode               | Object |             |
+
+##### Synapses example
+```yml 
+  - name: "tv-episode"
+    signals:
+      - order: "Info about episode {{ tv_episode }} of season {{ tv_season }} of {{ tv }}"
+    neurons:
+      - movie_db:
+          api_key: "YOUR_API_KEY"
+          action: "TV_SEASON"
+          language: "fr"
+          file_template: templates/movie_db_tv_episode.j2
+          tv: "{{ tv }}"
+          tv_season: "{{ tv_season }}"
+          tv_episode: "{{ tv_episode }}"
+```
+
+The template defined in the templates/movie_db_tv_episode.j2
+```jinja2
+{% if tv is defined %}
+    {% if episode is defined %}
+        Episode {{ query["episode"] }} of season {{ query["season"] }} of {{ query["tv"] }} : {{ episode["name"] }}.
+        
+        Overview: {{ episode["overview"] }}
+    {% else %}
+        Episode {{ query["episode"] }} of season {{ query["season"] }} of {{ query["tv"] }} not found 
+    {% endif %}
+{% else %}
+    TV Show {{ query["tv"] }} not found
+{% endif %}
+```
 
 ## Notes
 
