@@ -52,7 +52,7 @@ Each of them requires specific options, return values and synapses example :
           language: "fr"
           extra_movie: "credits"
           file_template: templates/movie_db_movie.j2
-          movie: {{ movie }}
+          movie: "{{ movie }}"
 
 ```
 
@@ -105,7 +105,7 @@ The template defined in the templates/movie_db_movie.j2
           action: "PEOPLE"
           say_template:
           - "{{ name }}, born {{ birthday }} at {{place_of_birth }}, {{ biography }}, known for [:5]|map(attribute='title')|join(', ')  "
-          people: {{ people }}
+          people: "{{ people }}"
 ```
 
 #### POPULAR
@@ -163,7 +163,7 @@ see [get top rated movies response schema](https://developers.themoviedb.org/3/m
 
 | Name    | Description                     | Type   | sample      |
 |---------|---------------------------------|--------|-------------|
-| result  | List of popular movies          | List   |             |
+| result  | List of top rated movies        | List   |             |
 
 ##### Synapses example
 
@@ -203,7 +203,7 @@ see [get upcoming movies response schema](https://developers.themoviedb.org/3/mo
 
 | Name    | Description                     | Type   | sample      |
 |---------|---------------------------------|--------|-------------|
-| result  | List of popular movies          | List   |             |
+| result  | List of upcoming movies         | List   |             |
 
 ##### Synapses example
 
@@ -244,7 +244,7 @@ see [get now playing movies response schema](https://developers.themoviedb.org/3
 
 | Name    | Description                     | Type   | sample      |
 |---------|---------------------------------|--------|-------------|
-| result  | List of popular movies          | List   |             |
+| result  | List of now playing movies      | List   |             |
 
 ##### Synapses example
 
