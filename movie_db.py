@@ -16,7 +16,12 @@ MOVIEDB_ACTIONS = (
     "TOP_RATED",
     "UPCOMING",
     "NOW_PLAYING",
-    "TV"
+    "TV",
+    "TV_POPULAR",
+    "TV_TOP_RATED",
+    "TV_LATEST",
+    "TV_SEASON",
+    "TV_EPISODE"
 )
 
 class Movie_db(NeuronModule):
@@ -38,6 +43,9 @@ class Movie_db(NeuronModule):
 
         self.tv = kwargs.get('tv', None)
         self.tv_extra = kwargs.get('tv_extra', None)
+
+        self.tv_season = kwargs.get('tv_season', None)
+        self.tv_episode = kwargs.get('tv_episode', None)
 
         self.people = kwargs.get('people', None)
 
@@ -139,6 +147,80 @@ class Movie_db(NeuronModule):
 
                     self.say(result)
 
+            if self.action == MOVIEDB_ACTIONS[7]:  # TV_POPULAR
+                logger.debug("Searching for popular TV Shows for language %s", self.language)
+                tv = tmdb.TV()
+                popular_response = tv.popular(language=self.language)
+                self.say(popular_response)
+
+            if self.action == MOVIEDB_ACTIONS[8]:  # TV_TOP_RATED
+                logger.debug("Searching for top rated TV Shows for language %s", self.language)
+                tv = tmdb.TV()
+                top_rated_response = tv.top_rated(language=self.language)
+                self.say(top_rated_response)
+
+            if self.action == MOVIEDB_ACTIONS[9]:  # TV_LATEST
+                logger.debug("Searching for latest TV Shows for language %s", self.language)
+                tv = tmdb.TV()
+                latest = tv.latest(language=self.language)
+                self.say(latest)
+
+            if self.action == MOVIEDB_ACTIONS[10]:  # TV_SEASON
+                if self._is_tv_season_parameters_ok():
+                    logger.debug("Searching for Season %s of TV Show %s for language %s",
+                                 self.tv_season, self.tv, self.language)
+
+                    search = tmdb.Search()
+                    search_response = search.tv(query=self.tv, language=self.language)
+
+                    result = dict()
+                    result["query"] = dict()
+                    result["query"]["tv"] = self.tv
+                    result["query"]["season"] = self.tv_season
+
+                    first_tv = next(iter(search_response["results"]), None)
+                    result["tv"] = first_tv
+                    if first_tv is None:
+                        logger.debug("No tv matches the query")
+
+                    else:
+                        logger.debug("Movie db first result : %s with id %s",
+                                     first_tv['name'],
+                                     first_tv['id'])
+                        season = tmdb.TV_Seasons(first_tv['id'], self.tv_season)
+                        result["season"] = season.info(language=self.language,
+                                                       append_to_response=self.tv_extra)
+
+                    self.say(result)
+
+            if self.action == MOVIEDB_ACTIONS[11]:  # TV_EPISODE
+                if self._is_tv_episode_parameters_ok():
+                    logger.debug("Searching for Episode %s of season %s of TV Show %s for language %s",
+                                 self.tv_episode, self.tv_season, self.tv, self.language)
+
+                    search = tmdb.Search()
+                    search_response = search.tv(query=self.tv, language=self.language)
+
+                    result = dict()
+                    result["query"] = dict()
+                    result["query"]["tv"] = self.tv
+                    result["query"]["season"] = self.tv_season
+                    result["query"]["episode"] = self.tv_episode
+
+                    first_tv = next(iter(search_response["results"]), None)
+                    result["tv"] = first_tv
+                    if first_tv is None:
+                        logger.debug("No tv matches the query")
+
+                    else:
+                        logger.debug("Movie db first result : %s with id %s",
+                                     first_tv['name'],
+                                     first_tv['id'])
+                        episode = tmdb.TV_Episodes(first_tv['id'], self.tv_season, self.tv_episode)
+                        result["episode"] = episode.info(language=self.language,
+                                                         append_to_response=self.tv_extra)
+
+                    self.say(result)
 
     def _is_parameters_ok(self):
         """
@@ -188,5 +270,35 @@ class Movie_db(NeuronModule):
         """
         if self.tv is None:
             raise MissingParameterException("MovieDB TV action needs a tv")
+
+        return True
+
+    def _is_tv_season_parameters_ok(self):
+        """
+        Check if parameters required to action TV_SEASON are present.
+        :return: True, if parameters are OK, raise exception otherwise.
+
+        .. raises:: MissingParameterException
+        """
+        if self.tv is None:
+            raise MissingParameterException("MovieDB TV_SEASON action needs a tv")
+        if self.tv_season is None:
+            raise MissingParameterException("MovieDB TV_SEASON action needs a tv season")
+
+        return True
+
+    def _is_tv_episode_parameters_ok(self):
+        """
+        Check if parameters required to action TV_EPISODE are present.
+        :return: True, if parameters are OK, raise exception otherwise.
+
+        .. raises:: MissingParameterException
+        """
+        if self.tv is None:
+            raise MissingParameterException("MovieDB TV_EPISODE action needs a tv")
+        if self.tv_season is None:
+            raise MissingParameterException("MovieDB TV_EPISODE action needs a tv season")
+        if self.tv_episode is None:
+            raise MissingParameterException("MovieDB TV_EPISODE action needs a tv episode")
 
         return True
