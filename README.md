@@ -278,11 +278,13 @@ In order to be able to query The Movie Db API, you need to get a api Key.
 
 ### How to get your The Movie Db Api Key
 
-1. Create a [Movie Db account](https://slack.com/signin)
+1. Create a [Movie Db account](https://www.themoviedb.org/account/signup)
 2. Connect to your account
 3. Go to API in the menu
 4. Create a request for developer api key  
 5. Accept licence agreement
 6. Fill information about application
+
+See [Getting Started](https://developers.themoviedb.org/3/getting-started) for more information.
 
 
