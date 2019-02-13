@@ -19,9 +19,10 @@ kalliope install --git-url https://github.com/royto/kalliope_neuron_movie_db.git
 
 The Movie Db Neuron has multiple available actions : MOVIE, PEOPLE, POPULAR, TOP_RATED, UPCOMING and PLAYING NOW.
 
-Each of them requires specific options, return values and synapses example : 
+Each of them requires specific options, return values and synapses
 
 #### MOVIE 
+
 ##### Options
 
 | parameter   | required | type   | default | choices    | comment                              |
@@ -31,7 +32,6 @@ Each of them requires specific options, return values and synapses example :
 | movie       | YES      | String | None    |            | The movie to search for              |
 | language    | NO       | String | en-US   |            | The language as ISO 639-1 code       |
 | extra_movie | NO       | String | None    |            | [extra data about the movie](https://developers.themoviedb.org/3/getting-started/append-to-response) |
-
 
 ##### Return Values
 
@@ -75,6 +75,7 @@ The template defined in the templates/movie_db_movie.j2
 ```
 
 #### PEOPLE
+
 ##### Options
 
 | parameter   | required | type   | default | choices    | comment                              |
@@ -89,7 +90,7 @@ The template defined in the templates/movie_db_movie.j2
 
 | Name    | Description                                     | Type   | sample      |
 |---------|-------------------------------------------------|--------|-------------|
-| people  | Information about the 1st people matching query | Object | see [get person details schema](https://developers.themoviedb.org/3/people/get-person-details)     |
+| people  | Information about the 1st people matching query | Object | see [get search person schema](https://developers.themoviedb.org/3/search/search-people)     |
 
 ##### Synapses example
 
@@ -104,7 +105,7 @@ The template defined in the templates/movie_db_movie.j2
           api_key: "YOUR_API_KEY"
           action: "PEOPLE"
           say_template:
-          - "{{ name }}, born {{ birthday }} at {{place_of_birth }}, {{ biography }}, known for [:5]|map(attribute='title')|join(', ')  "
+          - "{{ name }}, born {{ birthday }} at {{place_of_birth }}, {{ biography }}, known for {{ known_for[:5]|map(attribute='title')|join(', ') }} "
           people: "{{ people }}"
 ```
 
