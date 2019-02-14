@@ -25,7 +25,7 @@ kalliope install --git-url https://github.com/royto/kalliope_neuron_movie_db.git
 
 ## Specification
 
-The Movie Db Neuron has multiple available actions : MOVIE, PEOPLE, POPULAR, TOP_RATED, UPCOMING and PLAYING NOW, TV.
+The Movie Db Neuron has multiple available actions : `MOVIE, PEOPLE`, `POPULAR`, `TOP_RATED`, `UPCOMING` and `PLAYING NOW`, `TV`, `TV_POPULAR`, `TV_TOP_RATED`, `TV_LATEST`, `TV_SEASON`, `TV_EPISODE`.
 
 Each of them requires specific options, return values and synapses
 
@@ -91,6 +91,7 @@ The template defined in the templates/movie_db_movie.j2
 |-------------|----------|--------|---------|------------|--------------------------------------|
 | action      | YES      | String | None    | PEOPLE     | Defines the action type              |
 | api_key     | YES      | String | None    |            | The API Key                          |
+| language    | NO       | String | en-US   |            | The language as ISO 639-1 code       |
 | people      | YES      | String | None    |            | The people to search for             |
 
 ##### Return Values
@@ -111,6 +112,7 @@ The template defined in the templates/movie_db_movie.j2
       - movie_db:
           api_key: "YOUR_API_KEY"
           action: "PEOPLE"
+          language: "fr"
           say_template:
           - "{{ name }}, born {{ birthday }} at {{place_of_birth }}, {{ biography }}, known for {{ known_for[:5]|map(attribute='title')|join(', ') }} "
           people: "{{ people }}"

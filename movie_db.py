@@ -84,17 +84,22 @@ class Movie_db(NeuronModule):
 
             if self.action == MOVIEDB_ACTIONS[1]:  # PEOPLE
                 if self.is_people_parameters_ok():
-                    logger.debug("Searching for people with query %s", self.people)
+                    logger.debug("Searching for people with query %s for language %s",
+                        self.people, self.language)
 
                     search = tmdb.Search()
-                    response = search.person(query=self.people)
+                    response = search.person(query=self.people, language=self.language)
                     first_people = search.results[0]
                     logger.debug("Movie db first result for people : %s", first_people)
-                    self.say(first_people)
-
-                    ##people = tmdb.People(firstPeople['id'])
-                    ##peopleResponse = people.info()
-                    ##self.say(peopleResponse)
+                    
+                    if first_people is None:
+                        logger.debug("No people matches the query")
+                        self.say(None)
+                    else: 
+                        people = tmdb.People(first_people['id'])
+                        peopleResponse = people.info(language=self.language)
+                        peopleResponse['known_for'] = first_people['known_for']
+                        self.say(peopleResponse)
 
             if self.action == MOVIEDB_ACTIONS[2]:  # POPULAR
                 logger.debug("Searching for popular movies for language %s", self.language)
