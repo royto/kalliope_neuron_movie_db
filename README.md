@@ -1,5 +1,7 @@
 # The Movie Db
 
+[![](https://img.shields.io/github/release/royto/kalliope_neuron_movie_db.svg?style=flat-square)](https://github.com/royto/kalliope_neuron_movie_db/releases/latest)
+
 ## Synopsis
 
 This neuron allows you to query The Movie DB API to
