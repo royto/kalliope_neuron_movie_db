@@ -319,7 +319,7 @@ List of movies played now:
           language: "fr"
           tv_extra: "credits"
           file_template: templates/tv_db_movie.j2
-          tv: {{ tv }}
+          tv: "{{ tv }}"
 
 ```
 
