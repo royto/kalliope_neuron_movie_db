@@ -10,3 +10,4 @@
       pip:
         name: tmdbsimple
         version: 2.2.0
+        executable: pip3
